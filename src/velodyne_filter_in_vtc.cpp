@@ -5,7 +5,10 @@ VelodyneFilterInVtc::VelodyneFilterInVtc()
 {
     private_nh.param("HZ", HZ, 10.0);
     private_nh.param("THRESHOLD", THRESHOLD, 0.5);
-    ros::Subscriber sub = private_nh.subscribe("/velodyne_points", 1, &VelodyneFilterInVtc::velodyne_callback, this);
+    
+    velodyne_sub = private_nh.subscribe("/velodyne_points", 1, &VelodyneFilterInVtc::velodyne_callback, this);
+
+    velodyne_filtered_pub = private_nh.advertise<sensor_msgs::PointCloud2>("/velodyne_points_filtered", 1);
 
     bool is_velodyne_subscribed = false;
 
@@ -15,14 +18,21 @@ void VelodyneFilterInVtc::velodyne_callback(const sensor_msgs::PointCloud2::Cons
 {
     pcl::fromROSMsg(*msg, *velodyne_cloud);
 
+    pcl::PointCloud<pcl::PointXYZI>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZI>);
 
-    // for(auto &point : velodyne_cloud->points){
-    //     double distance = caluclate_distance(point.x, point.y, point.z);
-    //     if(distance < THRESHOLD){
-    //         point.intensity = 0;
-    //     }
-    // }
-    
+    for(auto &point : velodyne_cloud->points){
+        double distance = caluclate_distance(point.x, point.y, point.z);
+        if(distance < THRESHOLD){
+            filtered_cloud->push_back(point);
+        }
+    }
+
+    sensor_msgs::PointCloud2 filtered_cloud_msg;
+    pcl::toROSMsg(*filtered_cloud, filtered_cloud_msg);
+    filtered_cloud_msg.header.frame_id = "velodyne";
+    filtered_cloud_msg.header.stamp = ros::Time::now();
+
+    velodyne_filtered_pub.publish(filtered_cloud_msg);
 
     is_velodyne_subscribed = true;
 }
