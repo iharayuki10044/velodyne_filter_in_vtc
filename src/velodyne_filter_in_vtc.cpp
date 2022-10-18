@@ -10,7 +10,7 @@ VelodyneFilterInVtc::VelodyneFilterInVtc()
 
     velodyne_filtered_pub = private_nh.advertise<sensor_msgs::PointCloud2>("/velodyne_points_filtered", 1);
 
-    bool is_velodyne_subscribed = false;
+    is_velodyne_subscribed = false;
 
 }
 
@@ -42,11 +42,25 @@ double VelodyneFilterInVtc::caluclate_distance(double x, double y, double z)
     return sqrt(x*x + y*y + z*z);
 }
 
+void VelodyneFilterInVtc::process()
+{
+    ros::Rate loop_rate(HZ);
+    std::cout << "------velodyne_filter_in_vtc------" << std::endl;
+
+    while(ros::ok()){
+        if(is_velodyne_subscribed){
+            std::cout << "velodyne_filtered_pub.publish" << std::endl;
+            // std::cout << "number of points: " << velodyne_cloud->points.size() << std::endl;
+            std::cout << "---------------------------------" << std::endl; 
+        }
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+}
+
 int main(int argc, char** argv){
-    // ros::init(argc, argv, "velodyne_filter_in_vtc");
-    // ros::NodeHandle nh;
-    // ros::NodeHandle pnh("~");
-    // VelodyneFilterInVtc velodyne_filter_in_vtc(nh, pnh);
-    // velodyne_filter_in_vtc.process();
+    ros::init(argc, argv, "velodyne_filter_in_vtc");
+    VelodyneFilterInVtc velodyne_filter_in_vtc;
+    velodyne_filter_in_vtc.process();
     return 0;
 }

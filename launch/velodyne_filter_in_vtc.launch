@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="hz" default="10"/>
+
+    <node pkg="velodyne_filter_in_vtc" type="velodyne_filter_in_vtc" name="velodyne_filter_in_vtc" output="screen">
+        <param name="hz" value="$(arg hz)"/>
+    </node>
+
+</launch>
