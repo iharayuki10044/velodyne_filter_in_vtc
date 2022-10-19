@@ -22,14 +22,12 @@ class VelodyneFilterInVtc{
 
         double caluclate_distance(double x, double y, double z);
 
-
-
     private:
         double HZ;
         double THRESHOLD;
         bool is_velodyne_subscribed;
 
-        pcl::PointCloud<pcl::PointXYZI>::Ptr velodyne_cloud;
+        pcl::PointCloud<pcl::PointXYZ>::Ptr velodyne_cloud {new pcl::PointCloud<pcl::PointXYZ>};
 
         ros::NodeHandle private_nh;
 

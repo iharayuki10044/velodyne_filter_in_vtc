@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="hz" default="10"/>
+    <arg name="threshold" default="1.0"/>
 
     <node pkg="velodyne_filter_in_vtc" type="velodyne_filter_in_vtc" name="velodyne_filter_in_vtc" output="screen">
-        <param name="hz" value="$(arg hz)"/>
+        <param name="HZ" value="$(arg hz)"/>
+        <param name="THRESHOLD" value="$(arg threshold)"/>
     </node>
 
 </launch>
