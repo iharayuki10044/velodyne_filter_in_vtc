@@ -29,7 +29,6 @@ void VelodyneFilterInVtc::velodyne_callback(const sensor_msgs::PointCloud2::Cons
         double distance = caluclate_distance(point.x, point.y, point.z);
         if(distance > THRESHOLD){
             filtered_cloud->push_back(point);
-            counter++; 
         }
     }
 
