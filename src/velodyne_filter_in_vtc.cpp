@@ -16,30 +16,20 @@ VelodyneFilterInVtc::VelodyneFilterInVtc()
 
 void VelodyneFilterInVtc::velodyne_callback(const sensor_msgs::PointCloud2::ConstPtr& msg)
 {
-    std::cout << "velodyne_callback" << std::endl;
-
-    std::cout << "input size: " << msg->data.size() << std::endl;
+    // std::cout << "velodyne_callback" << std::endl;
+    // std::cout << "input size: " << msg->data.size() << std::endl;
 
     pcl::fromROSMsg(*msg, *velodyne_cloud);
 
-    std::cout << "velodyne_cloud->size() : " << velodyne_cloud->size() << std::endl;
+    // std::cout << "velodyne_cloud->size() : " << velodyne_cloud->size() << std::endl;
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
-
-    double min_distance = 1000.0;
-    double min_x = 0.0;
-    double min_y = 0.0;
-    double min_z = 0.0;
-    int counter = 0;
 
     for(auto &point : velodyne_cloud->points){
         double distance = caluclate_distance(point.x, point.y, point.z);
         if(distance > THRESHOLD){
             filtered_cloud->push_back(point);
             counter++; 
-        }
-        if(counter < 100){
-            std::cout << "distance: " << distance << std::endl;
         }
     }
 
@@ -48,7 +38,7 @@ void VelodyneFilterInVtc::velodyne_callback(const sensor_msgs::PointCloud2::Cons
     filtered_cloud_msg.header.frame_id = "velodyne";
     filtered_cloud_msg.header.stamp = ros::Time::now();
 
-    std::cout << "filtered_cloud->size() : " << filtered_cloud->size() << std::endl;
+    // std::cout << "filtered_cloud->size() : " << filtered_cloud->size() << std::endl;
 
     velodyne_filtered_pub.publish(filtered_cloud_msg);
 
@@ -63,7 +53,7 @@ double VelodyneFilterInVtc::caluclate_distance(double x, double y, double z)
 void VelodyneFilterInVtc::process()
 {
     ros::Rate loop_rate(HZ);
-    std::cout << "------velodyne_filter_in_vtc------" << std::endl;
+    // std::cout << "------velodyne_filter_in_vtc------" << std::endl;
 
     while(ros::ok()){
         if(is_velodyne_subscribed){
