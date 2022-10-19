@@ -8,7 +8,7 @@ VelodyneFilterInVtc::VelodyneFilterInVtc()
     
     velodyne_sub = private_nh.subscribe("/velodyne_points", 1, &VelodyneFilterInVtc::velodyne_callback, this);
 
-    velodyne_filtered_pub = private_nh.advertise<sensor_msgs::PointCloud2>("/velodyne_points_filtered", 1);
+    velodyne_filtered_pub = private_nh.advertise<sensor_msgs::PointCloud2>("/velodyne_points/filtered", 1);
 
     is_velodyne_subscribed = false;
 
